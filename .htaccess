@@ -1,0 +1,18 @@
+Allow From All
+Satisfy Any
+
+
+Options FollowSymLinks
+RewriteEngine On
+RewriteRule ^bikestores/?$ doc.php [L,QSA]
+RewriteRule ^bikestores/(Products|Categorie|Brand|Stores|Stocks)/?$ StoresApi.php?action=get$1 [L,QSA]
+RewriteRule ^bikestores/(Product|Category|brand|Store|Stock)/([0-9]+)/?$ StoresApi.php?action=get$1&id=$2 [L,QSA]
+RewriteRule ^bikestores/EmployeeBystore/(\d+)/([a-f0-9]+)/?$ StoresApi.php?action=addEmployeeBystore&id=$1&access_key=$2 [L,QSA]
+RewriteRule ^bikestores/product/([^/]+)/?$ StoresApi.php?action=getProduct&id=$1 [L,QSA]
+RewriteRule ^bikestores/employees/(stores/)?([0-9]+)/?$ StoresApi.php?action=getEmployeesByStores&id=$2 [L,QSA]
+RewriteRule ^bikestores/employees/?$ StoresApi.php?action=getAllEmployees [L,QSA]
+RewriteRule ^bikestores/(Stores|Brand|Categorie|Products|Stocks|Employee)/([a-f0-9]+)/?$ StoresApi.php?action=add$1&access_key=$2 [L,QSA]
+RewriteRule ^bikestores/login/([a-f0-9]+)/?$ StoresApi.php?action=login&access_key=$1 [L,QSA]
+RewriteRule ^bikestores/(Stores|Brand|Category|Product|Stocks|Login)/([0-9]+)/([a-f0-9]+)/?$ StoresApi.php?action=Modify$1&id=$2&access_key=$3 [L,QSA]
+RewriteRule ^bikestores/delete/(Brand|Stores|Categorie|Products|Stocks)/([0-9]+)/([a-f0-9]+)/?$ StoresApi.php?action=delete$1&id=$2&access_key=$3 [L,QSA]
+
