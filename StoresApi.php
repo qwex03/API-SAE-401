@@ -463,19 +463,30 @@ switch($request_method){
                     }
                 }
             } elseif ($_REQUEST["action"] == "deleteStores" && !empty($_REQUEST["id"])) {
-                $id = $_REQUEST["id"];
-                $store = $StoreRepository->find($id);
-            
-                if ($store == null) {
-                    echo json_encode(["status" => "failed", "message" => "Store not found"]);
-                } else {
-                    try {
+                try {
+                    $id = $_REQUEST["id"];
+                    $store = $StoreRepository->find($id);
+                    
+                    if ($store == null) {
+                        echo json_encode(["status" => "failed", "message" => "Store not found"]);
+                    } else {
+                        $stocks = $StocksRepository->findBy(["store_id" => $id]);
+                        foreach ($stocks as $stock) {
+                            $entityManager->remove($stock);
+                        }
+                        
+                        $employees = $EmployeesRepository->findBy(["store_id" => $id]);
+                        foreach ($employees as $employee) {
+                            $entityManager->remove($employee);
+                        }
+                        
                         $entityManager->remove($store);
                         $entityManager->flush();
-                        echo json_encode(["status" => "success", "message" => "Store delete"]);
-                    } catch (\Exception $e) {
-                        echo json_encode(["status" => "failed", "message" => "Failed to delete store"]);
+                        
+                        echo json_encode(["status" => "success", "message" => "Store and associated stocks and employees deleted"]);
                     }
+                } catch (\Exception $e) {
+                    echo json_encode(["status" => "failed", "message" => "Failed to delete store and associated stocks and employees"]);
                 }
             } elseif ($_REQUEST["action"] == "deleteStocks" && !empty($_REQUEST["id"])) {
                 $id = $_REQUEST["id"];
